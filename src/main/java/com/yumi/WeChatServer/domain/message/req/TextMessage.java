@@ -11,4 +11,11 @@ public class TextMessage extends BaseMessage {
     public void setContent(String content) {
         Content = content;
     }
+
+    @Override
+    public String toString() {
+        return "TextMessage{" +
+                "Content='" + Content + '\'' +
+                '}';
+    }
 }

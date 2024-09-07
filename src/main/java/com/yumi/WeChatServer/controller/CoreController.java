@@ -10,6 +10,8 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,6 +29,8 @@ public class CoreController {
     private WeiXinInfo weiXinInfo;
     @Resource
     private TextMessageService textMessageService;
+
+    private static Logger logger = LoggerFactory.getLogger(CoreController.class);
 
     @GetMapping
     public void goGet(HttpServletRequest request, HttpServletResponse response)
@@ -66,9 +70,10 @@ public class CoreController {
                     .parseXml(new StringReader(descMessage));
             /** 获得用户发来的消息类型，并做相应的处理 */
             String messageType = requestMap.get("MsgType");
-
+            logger.info("messageType: {}", messageType);
             /*处理不同格式的消息类型开始-------------------------------------------------------*/
             // 用户发来的是文本消息
+
             if (messageType.equals(MessageUtil.REQ_MESSAGE_TYPE_TEXT)) {
                 TextMessage textMessage = new TextMessage();
                 textMessage.setFromUserName(requestMap.get("FromUserName"));
@@ -114,7 +119,7 @@ public class CoreController {
             }
             /*处理不同格式的消息类型介绍-------------------------------------------------------*/
 
-            AesUtils.aescMessage(respMessage,
+            respMessage = AesUtils.aescMessage(respMessage,
                     request.getParameter("timestamp"),
                     request.getParameter("nonce"), weiXinInfo);
         } catch (Exception e) {
