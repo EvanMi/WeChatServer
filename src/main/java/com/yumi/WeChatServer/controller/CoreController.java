@@ -26,10 +26,11 @@ public class CoreController {
         String signature = request.getParameter("signature");
         String timestamp = request.getParameter("timestamp");
         String nonce = request.getParameter("nonce");
-        String echoStr = request.getParameter("echoStr");
+        String echostr = request.getParameter("echostr");
         try(PrintWriter out = response.getWriter()) {
             if (SignUtil.checkSignature(signature, timestamp, nonce, weiXinInfo)) {
-                out.print(echoStr);
+                out.print(echostr);
+                out.flush();
             }
         }
     }
