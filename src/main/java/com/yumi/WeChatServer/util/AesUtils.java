@@ -3,8 +3,6 @@ package com.yumi.WeChatServer.util;
 import com.yumi.WeChatServer.domain.WeiXinInfo;
 import com.yumi.WeChatServer.util.aes.AesException;
 import com.yumi.WeChatServer.util.aes.WXBizMsgCrypt;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class AesUtils {
     public static String descMessage(String encrypt, String msgSignature,
