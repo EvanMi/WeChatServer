@@ -1,6 +1,6 @@
 package com.yumi.WeChatServer.domain.message.resp;
 
-public class TextMessage extends BaseMessage {
+public class TextResp extends BaseResp {
     // 回复的消息内容
     private String Content;
 

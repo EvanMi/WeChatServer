@@ -1,6 +1,6 @@
 package com.yumi.WeChatServer.domain.message.req;
 
-public abstract class BaseMessage {
+public abstract class BaseRequest {
     // 开发者微信号
     private String ToUserName;
     // 发送方帐号（一个OpenID）

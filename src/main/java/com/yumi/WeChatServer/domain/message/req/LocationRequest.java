@@ -1,6 +1,6 @@
 package com.yumi.WeChatServer.domain.message.req;
 
-public class LocationMessage extends BaseMessage {
+public class LocationRequest extends BaseRequest {
     // 地理位置维度
     private String Location_X;
     // 地理位置经度

@@ -1,6 +1,6 @@
 package com.yumi.WeChatServer.domain.message.req;
 
-public class LinkMessage extends BaseMessage {
+public class LinkRequest extends BaseRequest {
     // 消息标题
     private String Title;
     // 消息描述

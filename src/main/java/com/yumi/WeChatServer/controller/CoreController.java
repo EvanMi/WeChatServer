@@ -1,7 +1,7 @@
 package com.yumi.WeChatServer.controller;
 
 import com.yumi.WeChatServer.domain.WeiXinInfo;
-import com.yumi.WeChatServer.domain.message.req.TextMessage;
+import com.yumi.WeChatServer.domain.message.req.TextRequest;
 import com.yumi.WeChatServer.service.TextMessageService;
 import com.yumi.WeChatServer.util.AesUtils;
 import com.yumi.WeChatServer.util.MessageUtil;
@@ -75,7 +75,7 @@ public class CoreController {
             // 用户发来的是文本消息
 
             if (messageType.equals(MessageUtil.REQ_MESSAGE_TYPE_TEXT)) {
-                TextMessage textMessage = new TextMessage();
+                TextRequest textMessage = new TextRequest();
                 textMessage.setFromUserName(requestMap.get("FromUserName"));
                 textMessage.setToUserName(requestMap.get("ToUserName"));
                 textMessage.setMsgType(requestMap.get("MsgType"));

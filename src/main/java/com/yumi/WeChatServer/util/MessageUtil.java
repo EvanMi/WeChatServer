@@ -1,7 +1,7 @@
 package com.yumi.WeChatServer.util;
 
 import com.thoughtworks.xstream.XStream;
-import com.yumi.WeChatServer.domain.message.resp.TextMessage;
+import com.yumi.WeChatServer.domain.message.resp.TextResp;
 import jakarta.servlet.http.HttpServletRequest;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -79,7 +79,7 @@ public class MessageUtil {
     }
 
 
-    public static String textMessageToXml(TextMessage textMessage) {
+    public static String textMessageToXml(TextResp textMessage) {
         XStream xStream = new XStream();
         xStream.alias("xml", textMessage.getClass());
         return xStream.toXML(textMessage);

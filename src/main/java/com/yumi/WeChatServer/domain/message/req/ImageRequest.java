@@ -1,6 +1,6 @@
 package com.yumi.WeChatServer.domain.message.req;
 
-public class ImageMessage extends BaseMessage {
+public class ImageRequest extends BaseRequest {
     // 图片链接
     private String PicUrl;
 

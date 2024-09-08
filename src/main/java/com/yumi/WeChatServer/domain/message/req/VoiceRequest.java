@@ -1,6 +1,6 @@
 package com.yumi.WeChatServer.domain.message.req;
 
-public class VoiceMessage extends BaseMessage {
+public class VoiceRequest extends BaseRequest {
     // 媒体ID
     private String MediaId;
     // 语音格式

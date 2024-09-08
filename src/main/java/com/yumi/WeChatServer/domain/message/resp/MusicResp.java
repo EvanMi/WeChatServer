@@ -1,6 +1,6 @@
 package com.yumi.WeChatServer.domain.message.resp;
 
-public class MusicMessage extends BaseMessage {
+public class MusicResp extends BaseResp {
     // 音乐
     private Music Music;
 
