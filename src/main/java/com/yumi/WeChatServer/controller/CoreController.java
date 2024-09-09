@@ -4,6 +4,7 @@ import com.alibaba.fastjson2.JSON;
 import com.yumi.WeChatServer.domain.WeiXinInfo;
 import com.yumi.WeChatServer.domain.message.req.EventRequest;
 import com.yumi.WeChatServer.domain.message.req.TextRequest;
+import com.yumi.WeChatServer.service.SubscribeEventService;
 import com.yumi.WeChatServer.service.TextMessageService;
 import com.yumi.WeChatServer.util.AesUtils;
 import com.yumi.WeChatServer.util.MessageUtil;
@@ -31,6 +32,8 @@ public class CoreController {
     private WeiXinInfo weiXinInfo;
     @Resource
     private TextMessageService textMessageService;
+    @Resource
+    private SubscribeEventService subscribeEventService;
 
     private static Logger logger = LoggerFactory.getLogger(CoreController.class);
 
@@ -117,6 +120,7 @@ public class CoreController {
                     eventRequest.setEvent(requestMap.get("Event"));
                     eventRequest.setEventKey(requestMap.get("EventKey"));
                     eventRequest.setTicket(requestMap.get("Ticket"));
+                    respMessage = subscribeEventService.processEvent(eventRequest);
                 }
                 // 取消订阅
                 else if (eventType
