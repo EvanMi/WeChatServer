@@ -1,5 +1,6 @@
 package com.yumi.WeChatServer.service;
 
+import com.alibaba.fastjson2.JSON;
 import com.yumi.WeChatServer.domain.message.req.TextRequest;
 import com.yumi.WeChatServer.domain.message.resp.TextResp;
 import com.yumi.WeChatServer.util.MessageUtil;
@@ -12,7 +13,10 @@ public class TextMessageService {
     private static Logger logger = LoggerFactory.getLogger(TextMessageService.class);
 
     public String processText(TextRequest req) {
-        logger.info("req: {}", req);
+        logger.info("req: {}", JSON.toJSONString(req));
+
+
+
         TextResp resp = new TextResp();
         resp.setContent("正在装修中");
         resp.setCreateTime(System.currentTimeMillis() / 1000);
