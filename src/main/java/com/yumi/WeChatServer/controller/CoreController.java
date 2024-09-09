@@ -1,6 +1,7 @@
 package com.yumi.WeChatServer.controller;
 
 import com.yumi.WeChatServer.domain.WeiXinInfo;
+import com.yumi.WeChatServer.domain.message.req.EventRequest;
 import com.yumi.WeChatServer.domain.message.req.TextRequest;
 import com.yumi.WeChatServer.service.TextMessageService;
 import com.yumi.WeChatServer.util.AesUtils;
@@ -39,7 +40,7 @@ public class CoreController {
         String timestamp = request.getParameter("timestamp");
         String nonce = request.getParameter("nonce");
         String echostr = request.getParameter("echostr");
-        try(PrintWriter out = response.getWriter()) {
+        try (PrintWriter out = response.getWriter()) {
             if (SignUtil.checkSignature(signature, timestamp, nonce, weiXinInfo)) {
                 out.print(echostr);
                 out.flush();
@@ -106,7 +107,14 @@ public class CoreController {
                 String eventType = requestMap.get("Event");
                 // 订阅
                 if (eventType.equals(MessageUtil.REQ_EVENT_TYPE_SUBSCRIBE)) {
-
+                    EventRequest eventRequest = new EventRequest();
+                    eventRequest.setFromUserName(requestMap.get("FromUserName"));
+                    eventRequest.setToUserName(requestMap.get("ToUserName"));
+                    eventRequest.setMsgType(requestMap.get("MsgType"));
+                    eventRequest.setCreateTime(Long.valueOf(requestMap.get("CreateTime")));
+                    eventRequest.setEvent(requestMap.get("Event"));
+                    eventRequest.setEventKey(requestMap.get("EventKey"));
+                    eventRequest.setTicket(requestMap.get("Ticket"));
                 }
                 // 取消订阅
                 else if (eventType
