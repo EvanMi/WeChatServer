@@ -3,11 +3,13 @@ package com.yumi.WeChatServer.dao;
 import com.yumi.WeChatServer.domain.po.UrlInfo;
 import jakarta.annotation.Resource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
+@Repository
 public class UrlInfoDao {
 
     @Resource
