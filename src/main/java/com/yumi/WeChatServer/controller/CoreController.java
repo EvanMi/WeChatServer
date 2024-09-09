@@ -1,5 +1,6 @@
 package com.yumi.WeChatServer.controller;
 
+import com.alibaba.fastjson2.JSON;
 import com.yumi.WeChatServer.domain.WeiXinInfo;
 import com.yumi.WeChatServer.domain.message.req.EventRequest;
 import com.yumi.WeChatServer.domain.message.req.TextRequest;
@@ -71,7 +72,7 @@ public class CoreController {
                     .parseXml(new StringReader(descMessage));
             /** 获得用户发来的消息类型，并做相应的处理 */
             String messageType = requestMap.get("MsgType");
-            logger.info("messageType: {}", messageType);
+            logger.info("message: {}", JSON.toJSON(requestMap));
             /*处理不同格式的消息类型开始-------------------------------------------------------*/
             // 用户发来的是文本消息
 
@@ -107,6 +108,7 @@ public class CoreController {
                 String eventType = requestMap.get("Event");
                 // 订阅
                 if (eventType.equals(MessageUtil.REQ_EVENT_TYPE_SUBSCRIBE)) {
+                    logger.info("subscribe~");
                     EventRequest eventRequest = new EventRequest();
                     eventRequest.setFromUserName(requestMap.get("FromUserName"));
                     eventRequest.setToUserName(requestMap.get("ToUserName"));
@@ -126,7 +128,7 @@ public class CoreController {
                 }
             }
             /*处理不同格式的消息类型介绍-------------------------------------------------------*/
-
+            logger.info("respMessage: {}", respMessage);
             respMessage = AesUtils.aescMessage(respMessage,
                     request.getParameter("timestamp"),
                     request.getParameter("nonce"), weiXinInfo);
