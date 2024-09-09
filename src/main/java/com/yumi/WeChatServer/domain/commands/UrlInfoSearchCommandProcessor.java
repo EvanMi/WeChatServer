@@ -49,7 +49,7 @@ public class UrlInfoSearchCommandProcessor implements TextCommandProcessor {
             Collections.sort(urlInfos, Comparator.comparing((UrlInfo u) -> u.getCreated()));
             StringBuilder sb = new StringBuilder();
             for (UrlInfo value : urlInfos) {
-                sb.append("[").append(value.getTitle()).append("] ").append(value.getAlbum()).append("-").append(value.getTitle())
+                sb.append("[").append(value.getUrlType()).append("] ").append(value.getAlbum()).append("-").append(value.getTitle())
                         .append(" ").append(value.getUrl()).append("\n");
             }
             if (sb.length() == 0) {
