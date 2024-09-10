@@ -14,7 +14,7 @@ public class TestMessageServiceTest {
     @Test
     public void testAddUrlInfo() {
         TextRequest textRequest = new TextRequest();
-        textRequest.setContent("[add]#吃西瓜的人#http://www.baidu.com#article#default");
+        textRequest.setContent("[add]#扫码登录真的很简单-附完整源码、视频讲解#https://mp.weixin.qq.com/s/dxapdiBwQfpcVeMwA9MiLQ#article#大厂文章");
         textRequest.setFromUserName("test");
         textRequest.setToUserName("sys");
         textRequest.setCreateTime(System.currentTimeMillis());
@@ -26,7 +26,7 @@ public class TestMessageServiceTest {
     @Test
     public void testListUrlInfo() {
         TextRequest textRequest = new TextRequest();
-        textRequest.setContent("?#西瓜真是一个好东西的 是多少是第三代");
+        textRequest.setContent("?#扫码登录并不难");
         textRequest.setFromUserName("test");
         textRequest.setToUserName("sys");
         textRequest.setCreateTime(System.currentTimeMillis());

@@ -9,7 +9,6 @@ import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -43,7 +42,7 @@ public class UrlInfoSearchCommandProcessor implements TextCommandProcessor {
                  ConcurrentMap<Integer, UrlInfo> resMap = SegmentUtil.segmentIndex(split[1])
                     .parallelStream()
                     .flatMap(keyword -> urlInfoDao.listUrlByTitleKeyword(keyword).stream())
-                    .collect(Collectors.toConcurrentMap(UrlInfo::getId, Function.identity()));
+                    .collect(Collectors.toConcurrentMap(UrlInfo::getId, Function.identity(), (v1, v2) -> v1));
                  urlInfos = new ArrayList<>(resMap.values());
             }
             Collections.sort(urlInfos, Comparator.comparing((UrlInfo u) -> u.getCreated()));
