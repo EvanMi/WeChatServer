@@ -53,8 +53,9 @@ public class UrlInfoPageCommandProcessor implements TextCommandProcessor {
             } else {
                 resp.setContent(sb.toString());
             }
+        } else {
+            resp.setContent("检查一下你的搜索命令");
         }
-        resp.setContent("检查一下你的搜索命令");
         return resp;
     }
 }
