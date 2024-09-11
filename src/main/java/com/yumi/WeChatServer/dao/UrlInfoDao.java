@@ -34,4 +34,26 @@ public class UrlInfoDao {
             return urlInfo;
         }, "%" + keyword + "%");
     }
+
+    public void deleteUrlByTitle(String title) {
+        String sql = "delete from url_info where title = ?";
+        this.jdbcTemplate.update(sql, title);
+    }
+
+    public List<UrlInfo> listUrlPageByAlbum(String album, int page) {
+        if (page > 0) {
+            page = page - 1;
+        }
+        String sql = "select * from url_info where album like ? limit ?, 5";
+        return this.jdbcTemplate.query(sql, (rs, rowNum) -> {
+            UrlInfo urlInfo = new UrlInfo();
+            urlInfo.setId(rs.getInt("id"));
+            urlInfo.setTitle(rs.getString("title"));
+            urlInfo.setUrlType(rs.getString("url_type"));
+            urlInfo.setUrl(rs.getString("url"));
+            urlInfo.setAlbum(rs.getString("album"));
+            urlInfo.setCreated(rs.getDate("created"));
+            return urlInfo;
+        }, "%" + album + "%", page);
+    }
 }

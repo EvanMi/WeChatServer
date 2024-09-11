@@ -4,6 +4,7 @@ import com.alibaba.fastjson2.JSON;
 import com.yumi.WeChatServer.domain.WeiXinInfo;
 import com.yumi.WeChatServer.domain.message.req.EventRequest;
 import com.yumi.WeChatServer.domain.message.req.TextRequest;
+import com.yumi.WeChatServer.service.ClickEventService;
 import com.yumi.WeChatServer.service.SubscribeEventService;
 import com.yumi.WeChatServer.service.TextMessageService;
 import com.yumi.WeChatServer.util.AesUtils;
@@ -34,6 +35,8 @@ public class CoreController {
     private TextMessageService textMessageService;
     @Resource
     private SubscribeEventService subscribeEventService;
+    @Resource
+    private ClickEventService clickEventService;
 
     private static Logger logger = LoggerFactory.getLogger(CoreController.class);
 
@@ -109,17 +112,17 @@ public class CoreController {
             else if (messageType.equals(MessageUtil.REQ_MESSAGE_TYPE_EVENT)) {
                 // 事件类型
                 String eventType = requestMap.get("Event");
+                EventRequest eventRequest = new EventRequest();
+                eventRequest.setFromUserName(requestMap.get("FromUserName"));
+                eventRequest.setToUserName(requestMap.get("ToUserName"));
+                eventRequest.setMsgType(requestMap.get("MsgType"));
+                eventRequest.setCreateTime(Long.valueOf(requestMap.get("CreateTime")));
+                eventRequest.setEvent(requestMap.get("Event"));
+                eventRequest.setEventKey(requestMap.get("EventKey"));
+                eventRequest.setTicket(requestMap.get("Ticket"));
                 // 订阅
                 if (eventType.equals(MessageUtil.REQ_EVENT_TYPE_SUBSCRIBE)) {
                     logger.info("subscribe~");
-                    EventRequest eventRequest = new EventRequest();
-                    eventRequest.setFromUserName(requestMap.get("FromUserName"));
-                    eventRequest.setToUserName(requestMap.get("ToUserName"));
-                    eventRequest.setMsgType(requestMap.get("MsgType"));
-                    eventRequest.setCreateTime(Long.valueOf(requestMap.get("CreateTime")));
-                    eventRequest.setEvent(requestMap.get("Event"));
-                    eventRequest.setEventKey(requestMap.get("EventKey"));
-                    eventRequest.setTicket(requestMap.get("Ticket"));
                     respMessage = subscribeEventService.processEvent(eventRequest);
                 }
                 // 取消订阅
@@ -128,7 +131,8 @@ public class CoreController {
                 }
                 // 点击按钮事件
                 else if (eventType.equals(MessageUtil.REQ_EVENT_TYPE_CLICK)) {
-
+                    logger.info("click~");
+                    respMessage = clickEventService.processEvent(eventRequest);
                 }
             }
             /*处理不同格式的消息类型介绍-------------------------------------------------------*/
