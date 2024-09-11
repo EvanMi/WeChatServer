@@ -10,6 +10,8 @@ import com.yumi.WeChatServer.domain.po.AccessToken;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
@@ -24,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class WeiXinUtil {
     public static String access_token_url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET";
-    public static String munu_create_url = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=ACCESS_TOKEN";
+    public static String menu_create_url = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=ACCESS_TOKEN";
     public static String user_access_token_url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code";
     public static String uni_pay_url = "https://api.mch.weixin.qq.com/pay/unifiedorder";
     public static String jpapi_ticket_url = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=TOKEN&type=jsapi";
@@ -73,10 +75,40 @@ public class WeiXinUtil {
         Menu menu = new Menu();
         List<Button> buttons = new ArrayList<>();
         CommonButton albumsButton = new CommonButton();
-        albumsButton.setKey("albums");
+        albumsButton.setKey("album");
         albumsButton.setType(ButtonType.CLICK);
-        albumsButton.setName("分类列表");
+        albumsButton.setName("合集列表");
         buttons.add(albumsButton);
+
+        CommonButton groupButton = new CommonButton();
+        groupButton.setKey("group");
+        groupButton.setType(ButtonType.CLICK);
+        groupButton.setName("加群");
+        buttons.add(groupButton);
+
+
+        CommonButton nothingButton = new CommonButton();
+        nothingButton.setKey("nothing");
+        nothingButton.setType(ButtonType.CLICK);
+        nothingButton.setName("无事发生");
+        buttons.add(nothingButton);
+
+        AccessToken accessToken = getAccessToken();
+        String url = menu_create_url.replace("ACCESS_TOKEN", accessToken.getToken());
+        System.out.println(url);
+        try (CloseableHttpClient client = HttpClients.createDefault()) {
+            // 创建POST请求
+            HttpPost post = new HttpPost(url);
+            post.setHeader("Content-Type", "application/json");
+            post.setEntity(new StringEntity(JSON.toJSONString(menu)));
+            // 发送请求并获取响应
+            try (CloseableHttpResponse response = client.execute(post)) {
+                String responseBody = EntityUtils.toString(response.getEntity(), "UTF-8");
+                System.out.println(responseBody);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

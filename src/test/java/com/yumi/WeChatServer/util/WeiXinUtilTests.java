@@ -20,4 +20,9 @@ public class WeiXinUtilTests {
             System.out.println(JSON.toJSONString(accessToken));
         }
     }
+
+    @Test
+    public void testCreateMenu() {
+        weiXinUtil.createMenu();
+    }
 }

@@ -21,6 +21,8 @@ public class ClickEventService {
                 sb.append(i + 1).append(": ").append(albums.get(i).getName()).append("\n");
             }
             return sb.toString();
+        } else if ("group".equalsIgnoreCase(eventRequest.getEventKey())) {
+            return "群名正在思考中~敬请期待";
         }
         return "你点了啥?";
     }
