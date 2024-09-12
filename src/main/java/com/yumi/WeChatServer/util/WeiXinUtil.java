@@ -15,6 +15,8 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -25,11 +27,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class WeiXinUtil {
+    private static Logger logger = LoggerFactory.getLogger(WeiXinUtil.class);
     public static String access_token_url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET";
     public static String menu_create_url = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=ACCESS_TOKEN";
     public static String user_access_token_url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code";
     public static String uni_pay_url = "https://api.mch.weixin.qq.com/pay/unifiedorder";
     public static String jpapi_ticket_url = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=TOKEN&type=jsapi";
+    public static String list_articles_url = "https://api.weixin.qq.com/cgi-bin/freepublish/batchget?access_token=ACCESS_TOKEN";
+    public static String list_material_url = "https://api.weixin.qq.com/cgi-bin/material/batchget_material?access_token=ACCESS_TOKEN";
 
     @Value("${com.yumi.wei.xin.appId}")
     private String appId;
@@ -37,6 +42,113 @@ public class WeiXinUtil {
     private String appSecret;
 
     private ConcurrentHashMap<String, AccessToken> tokenMap = new ConcurrentHashMap<>();
+
+
+    public static class ListMaterialRequest {
+        public static String IMAGE_TYPE = "image";
+        public static String VIDEO_TYPE = "video";
+        public static String VOICE_TYPE = "voice";
+        public static String NEWS_TYPE = "news";
+
+        private int offset;
+        private int count;
+        private String type;
+
+        public int getOffset() {
+            return offset;
+        }
+
+        public void setOffset(int offset) {
+            this.offset = offset;
+        }
+
+        public int getCount() {
+            return count;
+        }
+
+        public void setCount(int count) {
+            this.count = count;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+    }
+
+    public void listMaterial(int offset, int count, String type, String accessToken) {
+        accessToken = accessToken == null ? getAccessToken().getToken() : accessToken;
+        String url = list_material_url.replace("ACCESS_TOKEN", accessToken);
+        logger.info("url: {}", url);
+        ListMaterialRequest listMaterialRequest = new ListMaterialRequest();
+        listMaterialRequest.setOffset(offset);
+        listMaterialRequest.setCount(count);
+        listMaterialRequest.setType(type); ;
+        httpPost(url, listMaterialRequest);
+    }
+
+    public static class ListArticlesRequest {
+        private int offset;
+        private int count;
+        private int no_content;
+
+        public int getOffset() {
+            return offset;
+        }
+
+        public void setOffset(int offset) {
+            this.offset = offset;
+        }
+
+        public int getCount() {
+            return count;
+        }
+
+        public void setCount(int count) {
+            this.count = count;
+        }
+
+        public int getNo_content() {
+            return no_content;
+        }
+
+        public void setNo_content(int no_content) {
+            this.no_content = no_content;
+        }
+    }
+
+    public void listArticles(int offset, int count, boolean needContent, String accessToken) {
+        accessToken = accessToken == null ? getAccessToken().getToken() : accessToken;
+        String url = list_articles_url.replace("ACCESS_TOKEN", accessToken);
+        logger.info("url: {}", url);
+        ListArticlesRequest listArticlesRequest = new ListArticlesRequest();
+        listArticlesRequest.setOffset(offset);
+        listArticlesRequest.setCount(count);
+        listArticlesRequest.setNo_content(needContent ? 0 : 1) ;
+        httpPost(url, listArticlesRequest);
+    }
+
+    private String httpPost(String url, Object param) {
+        String res = null;
+        try (CloseableHttpClient client = HttpClients.createDefault()) {
+            // 创建POST请求
+            HttpPost post = new HttpPost(url);
+            post.setHeader("Content-Type", "application/json");
+            post.setEntity(new StringEntity(JSON.toJSONString(param)));
+            // 发送请求并获取响应
+            try (CloseableHttpResponse response = client.execute(post)) {
+                String responseBody = EntityUtils.toString(response.getEntity(), "UTF-8");
+                logger.info("responseBody: {}", responseBody);
+                res = responseBody;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return res;
+    }
 
     //获取accesstoken
     public AccessToken getAccessToken() {
@@ -95,20 +207,7 @@ public class WeiXinUtil {
 
         AccessToken accessToken = getAccessToken();
         String url = menu_create_url.replace("ACCESS_TOKEN", accessToken.getToken());
-        System.out.println(url);
-        try (CloseableHttpClient client = HttpClients.createDefault()) {
-            // 创建POST请求
-            HttpPost post = new HttpPost(url);
-            post.setHeader("Content-Type", "application/json");
-            post.setEntity(new StringEntity(JSON.toJSONString(menu)));
-            // 发送请求并获取响应
-            try (CloseableHttpResponse response = client.execute(post)) {
-                String responseBody = EntityUtils.toString(response.getEntity(), "UTF-8");
-                System.out.println(responseBody);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        httpPost(url, menu);
     }
 
 }

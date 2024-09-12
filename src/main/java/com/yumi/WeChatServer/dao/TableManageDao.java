@@ -27,7 +27,14 @@ public class TableManageDao {
                     created TIMESTAMP NOT NULL
                 );
                                 """;
-        this.jdbcTemplate.update(sql1);
-        this.jdbcTemplate.update(sql2);
+        String sql3 = """
+                                CREATE TABLE msg_id (
+                    id INT PRIMARY KEY AUTO_INCREMENT,
+                    title VARCHAR(255) NOT NULL,
+                    msg_id VARCHAR(255) NOT NULL,
+                    created TIMESTAMP NOT NULL
+                )
+                                """;
+        this.jdbcTemplate.update(sql3);
     }
 }

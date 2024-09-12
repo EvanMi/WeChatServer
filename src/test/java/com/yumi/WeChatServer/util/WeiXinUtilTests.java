@@ -25,4 +25,16 @@ public class WeiXinUtilTests {
     public void testCreateMenu() {
         weiXinUtil.createMenu();
     }
+
+    @Test
+    public void testListArticles() {
+        String token = "84_wYEwK4h9WalF2yqR8ZzWPxNMA07A6qc3dnVB-xsyikVO7ZubSMqpc18ThxcVH1oGpC2CrwyP_oMHZkACg_kToG81GTCZeGd0e84H2JzOLjJ8sWur32u8bcm7JiMVCHgAIAIPU";
+        weiXinUtil.listArticles(1, 20, false, token);
+    }
+
+    @Test
+    public void testListMaterial() {
+        String token = "84_wYEwK4h9WalF2yqR8ZzWPxNMA07A6qc3dnVB-xsyikVO7ZubSMqpc18ThxcVH1oGpC2CrwyP_oMHZkACg_kToG81GTCZeGd0e84H2JzOLjJ8sWur32u8bcm7JiMVCHgAIAIPU";
+        weiXinUtil.listMaterial(0, 20, WeiXinUtil.ListMaterialRequest.IMAGE_TYPE, token);
+    }
 }

@@ -29,8 +29,8 @@ public class MessageUtil {
     public static final String REQ_EVENT_TYPE_CLICK = "CLICK";
     public static final String REQ_EVENT_TYPE_LOCATION = "LOCATION";
     public static final String REQ_EVENT_TYPE_SCAN = "SCAN";
-
     public static final String REQ_EVENT_TYPE_VIEW = "VIEW";
+    public static final String REQ_EVENt_TYPE_PUBLISH = "MASSSENDJOBFINISH";
     public static Map<String, String> parseXml(HttpServletRequest request)
             throws Exception {
         Map<String, String> map = new HashMap<String, String>();

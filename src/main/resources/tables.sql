@@ -12,3 +12,10 @@ CREATE TABLE albums (
     name VARCHAR(255) NOT NULL,
     created TIMESTAMP NOT NULL
 );
+
+CREATE TABLE msg_id (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(255) NOT NULL,
+    msg_id VARCHAR(255) NOT NULL,
+    created TIMESTAMP NOT NULL
+);

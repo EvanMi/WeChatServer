@@ -1,6 +1,7 @@
 package com.yumi.WeChatServer.controller;
 
 import com.alibaba.fastjson2.JSON;
+import com.yumi.WeChatServer.dao.MsgIdDao;
 import com.yumi.WeChatServer.domain.WeiXinInfo;
 import com.yumi.WeChatServer.domain.message.req.EventRequest;
 import com.yumi.WeChatServer.domain.message.req.TextRequest;
@@ -37,6 +38,8 @@ public class CoreController {
     private SubscribeEventService subscribeEventService;
     @Resource
     private ClickEventService clickEventService;
+    @Resource
+    private MsgIdDao msgIdDao;
 
     private static Logger logger = LoggerFactory.getLogger(CoreController.class);
 
@@ -133,6 +136,15 @@ public class CoreController {
                 else if (eventType.equals(MessageUtil.REQ_EVENT_TYPE_CLICK)) {
                     logger.info("click~");
                     respMessage = clickEventService.processEvent(eventRequest);
+                }
+                // 文章发布成功
+                else if (eventType.equals(MessageUtil.REQ_EVENt_TYPE_PUBLISH)) {
+                    if (requestMap.get("ErrorCount").equalsIgnoreCase("0")) {
+                        String msgId = requestMap.get("MsgID");
+                        if (null != msgId) {
+                            msgIdDao.addMsgIdWithoutTitle(msgId);
+                        }
+                    }
                 }
             }
             /*处理不同格式的消息类型介绍-------------------------------------------------------*/

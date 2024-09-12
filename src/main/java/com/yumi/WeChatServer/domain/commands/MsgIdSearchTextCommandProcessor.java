@@ -4,18 +4,13 @@ import com.yumi.WeChatServer.dao.MsgIdDao;
 import com.yumi.WeChatServer.dao.UrlInfoDao;
 import com.yumi.WeChatServer.domain.message.req.TextRequest;
 import com.yumi.WeChatServer.domain.message.resp.TextResp;
-import com.yumi.WeChatServer.domain.po.UrlInfo;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-
 import static com.yumi.WeChatServer.domain.commands.CommandConstant.COMMAND_SPLIT;
 
-@Component("[add]")
-public class UrlInfoAddTextCommandProcessor extends AdminTextCommandProcessor {
-    @Resource
-    private UrlInfoDao urlInfoDao;
+@Component("[msg]")
+public class MsgIdSearchTextCommandProcessor extends AdminTextCommandProcessor {
     @Resource
     private MsgIdDao msgIdDao;
 
@@ -29,18 +24,11 @@ public class UrlInfoAddTextCommandProcessor extends AdminTextCommandProcessor {
         try {
             String content = req.getContent();
             String[] split = content.split(COMMAND_SPLIT);
-            UrlInfo urlInfo = new UrlInfo();
-            urlInfo.setTitle(split[1]);
-            urlInfo.setUrl(split[2]);
-            urlInfo.setUrlType(split[3]);
-            urlInfo.setAlbum(split[4]);
-            urlInfo.setCreated(new Date());
-            urlInfoDao.addUrl(urlInfo);
-            msgIdDao.tryBindTitleWithMsgId(urlInfo.getTitle());
-            resp.setContent("添加成功");
+            String msgIdByTitle = msgIdDao.getMsgIdByTitle(split[1]);
+            resp.setContent(msgIdByTitle);
         } catch (Exception e) {
             e.printStackTrace();
-            resp.setContent("添加失败");
+            resp.setContent("没有找到");
         }
         return resp;
     }
