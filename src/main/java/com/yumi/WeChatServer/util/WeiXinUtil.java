@@ -35,7 +35,7 @@ public class WeiXinUtil {
     public static String jpapi_ticket_url = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=TOKEN&type=jsapi";
     public static String list_articles_url = "https://api.weixin.qq.com/cgi-bin/freepublish/batchget?access_token=ACCESS_TOKEN";
     public static String list_material_url = "https://api.weixin.qq.com/cgi-bin/material/batchget_material?access_token=ACCESS_TOKEN";
-
+    public static String list_comments_url = "https://api.weixin.qq.com/cgi-bin/comment/list?access_token=ACCESS_TOKEN";
     @Value("${com.yumi.wei.xin.appId}")
     private String appId;
     @Value("${com.yumi.wei.xin.appSecret}")
@@ -88,6 +88,67 @@ public class WeiXinUtil {
         listMaterialRequest.setCount(count);
         listMaterialRequest.setType(type); ;
         httpPost(url, listMaterialRequest);
+    }
+
+    public static class ListCommentsRequest {
+        private int msg_data_id;
+        private int index = 0;
+        private int begin;
+        private int count;
+        private int type = 0;
+
+        public int getMsg_data_id() {
+            return msg_data_id;
+        }
+
+        public void setMsg_data_id(int msg_data_id) {
+            this.msg_data_id = msg_data_id;
+        }
+
+        public int getIndex() {
+            return index;
+        }
+
+        public void setIndex(int index) {
+            this.index = index;
+        }
+
+        public int getBegin() {
+            return begin;
+        }
+
+        public void setBegin(int begin) {
+            this.begin = begin;
+        }
+
+        public int getCount() {
+            return count;
+        }
+
+        public void setCount(int count) {
+            this.count = count;
+        }
+
+        public int getType() {
+            return type;
+        }
+
+        public void setType(int type) {
+            this.type = type;
+        }
+    }
+
+    public void listComments(int msgDataId, int index, int begin, int count, int type, String accessToken) {
+        accessToken = accessToken == null ? getAccessToken().getToken() : accessToken;
+        String url = list_comments_url.replace("ACCESS_TOKEN", accessToken);
+        logger.info("url: {}", url);
+        ListCommentsRequest listCommentsRequest = new ListCommentsRequest();
+        listCommentsRequest.setMsg_data_id(msgDataId);
+        listCommentsRequest.setIndex(index);
+        listCommentsRequest.setBegin(begin);
+        listCommentsRequest.setCount(count);
+        listCommentsRequest.setType(type);
+        httpPost(url, listCommentsRequest);
     }
 
     public static class ListArticlesRequest {

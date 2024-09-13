@@ -37,4 +37,10 @@ public class WeiXinUtilTests {
         String token = "84_wYEwK4h9WalF2yqR8ZzWPxNMA07A6qc3dnVB-xsyikVO7ZubSMqpc18ThxcVH1oGpC2CrwyP_oMHZkACg_kToG81GTCZeGd0e84H2JzOLjJ8sWur32u8bcm7JiMVCHgAIAIPU";
         weiXinUtil.listMaterial(0, 20, WeiXinUtil.ListMaterialRequest.IMAGE_TYPE, token);
     }
+
+    @Test
+    public void testListComments() {
+        String token = "84_p1o9HBjVbOG3YEzSZbTtzsPE3cVrNruntN31uxQ3Rly7bHY5lF6DU8gDEHV8HYfNZomwQ_N4J76fsbkMx_7NrIbCJ5jvLhtbRkEdBKXewWtPSeMFi7BKvbssXtsNYHjABAJUD";
+        weiXinUtil.listComments(1000000040, 0, 0, 20, 0, token);
+    }
 }
