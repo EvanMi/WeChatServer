@@ -58,7 +58,7 @@ public class UrlInfoSearchCommandProcessor implements TextCommandProcessor {
             }
             return resp;
         }
-        resp.setContent("检查一下你的搜索命令");
+        resp.setContent("");
         return resp;
     }
 }

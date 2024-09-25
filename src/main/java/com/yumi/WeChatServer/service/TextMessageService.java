@@ -3,6 +3,7 @@ package com.yumi.WeChatServer.service;
 import com.alibaba.fastjson2.JSON;
 import com.yumi.WeChatServer.dao.UrlInfoDao;
 import com.yumi.WeChatServer.domain.commands.TextCommandProcessor;
+import com.yumi.WeChatServer.domain.commands.UrlInfoSearchCommandProcessor;
 import com.yumi.WeChatServer.domain.message.req.TextRequest;
 import com.yumi.WeChatServer.domain.message.resp.TextResp;
 import com.yumi.WeChatServer.util.MessageUtil;
@@ -14,6 +15,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static com.yumi.WeChatServer.domain.commands.CommandConstant.COMMAND_SPLIT;
 import static com.yumi.WeChatServer.domain.commands.CommandConstant.WELCOME_TEXT;
@@ -25,6 +27,11 @@ public class TextMessageService {
     private UrlInfoDao urlInfoDao;
     @Resource
     private Map<String, TextCommandProcessor> commandMap = new HashMap<>();
+
+    @Resource
+    private UrlInfoSearchCommandProcessor urlInfoSearchCommandProcessor;
+
+    private final ConcurrentHashMap<String, Long> limitMap = new ConcurrentHashMap<>();
 
 
     public String processText(TextRequest req) {
@@ -47,6 +54,16 @@ public class TextMessageService {
         if (null != textCommandProcessor) {
             return MessageUtil.textMessageToXml(textCommandProcessor.process(req));
         }
+        TextResp process = urlInfoSearchCommandProcessor.process(req);
+        if (StringUtils.hasText(process.getContent())) {
+            return MessageUtil.textMessageToXml(process);
+        }
+        //兜底限流
+        Long currentTimestamp = limitMap.computeIfAbsent(req.getFromUserName(), key -> System.currentTimeMillis());
+        if (System.currentTimeMillis() - currentTimestamp < 7200 * 1000) {
+            return "";
+        }
+        limitMap.put(req.getFromUserName(), System.currentTimeMillis());
         return MessageUtil.textMessageToXml(getWelcome(req));
     }
 
