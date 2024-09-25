@@ -57,8 +57,29 @@ public class UrlInfoSearchCommandProcessor implements TextCommandProcessor {
                 resp.setContent(sb.toString());
             }
             return resp;
+        } else {
+            //优先把key视为整体
+            List<UrlInfo> urlInfos = urlInfoDao.listUrlByTitleKeyword(content);
+            if (null == urlInfos || urlInfos.isEmpty()) {
+                //整体没有进行分词
+                ConcurrentMap<Integer, UrlInfo> resMap = SegmentUtil.segmentIndex(content)
+                        .parallelStream()
+                        .flatMap(keyword -> urlInfoDao.listUrlByTitleKeyword(keyword).stream())
+                        .collect(Collectors.toConcurrentMap(UrlInfo::getId, Function.identity(), (v1, v2) -> v1));
+                urlInfos = new ArrayList<>(resMap.values());
+            }
+            Collections.sort(urlInfos, Comparator.comparing((UrlInfo u) -> u.getCreated()));
+            StringBuilder sb = new StringBuilder();
+            for (UrlInfo value : urlInfos) {
+                sb.append("[").append(value.getUrlType()).append("] ").append(value.getAlbum()).append("-").append(value.getTitle())
+                        .append(" ").append(value.getUrl()).append("\n");
+            }
+            if (sb.length() == 0) {
+                resp.setContent("");
+            } else {
+                resp.setContent(sb.toString());
+            }
+            return resp;
         }
-        resp.setContent("");
-        return resp;
     }
 }
